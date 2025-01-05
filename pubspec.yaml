@@ -39,6 +39,9 @@ dependencies:
   flutter_hooks: ^0.20.5
   hooks_riverpod: ^2.6.1
 
+  #firebase
+  firebase_core: ^3.9.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
