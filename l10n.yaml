@@ -1,0 +1,5 @@
+arb-dir: lib/l10n # ARBファイルを格納するディレクトリを指定します。
+template-arb-file: app_ja.arb # テンプレートのARBファイルを指定します。デフォルトの言語のARBファイルを設定すると良いと思います。 
+output-class: L10n # 手順3-4で自動生成されるクラス名。設定しないとAppLocalizationsになります。
+output-localization-file: app_localizations.dart # 手順3-4で自動生成される言語ファイル名。ローカライゼーションを使うときはこのファイルをインポートします。
+nullable-getter: false
