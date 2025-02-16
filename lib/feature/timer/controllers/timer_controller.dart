@@ -16,6 +16,7 @@ class TimerControllerController extends Notifier<TimerState> {
   void startPomodoro() {
     // 開始時の処理を追加
     if (state.isRunning) return;
+
     final timer = Timer.periodic(const Duration(seconds: 1), _onUpdateTimer);
 
     state = state.copyWith(isRunning: true, timer: timer);
@@ -28,6 +29,10 @@ class TimerControllerController extends Notifier<TimerState> {
 
     if (isOver) {
       timer.cancel();
+
+      // ポモドーロの各種情報を更新する
+      final completedPomodoros = state.completedPomodoros + 1;
+
       state = state.copyWith(
         isRunning: false,
         currentWorkingDuration: state.currentWorkingDuration,
@@ -38,12 +43,27 @@ class TimerControllerController extends Notifier<TimerState> {
   }
 
   void stopPomodoro() {
+    if (!state.isRunning) {
+      return;
+    }
+    // 停止時の処理を追加
+    state.timer?.cancel();
+
     // 停止時の処理を追加
     state = state.copyWith(isRunning: false);
   }
 
   void reset() {
     state = state.copyWith(isRunning: false);
+  }
+
+  void startBreak() {
+    // 休憩開始時の処理を追加
+    if (state.isRunning) return;
+
+    final timer = Timer.periodic(const Duration(seconds: 1), _onUpdateTimer);
+
+    state = state.copyWith(isRunning: true, timer: timer);
   }
 
   // updateTimerの関数を起動する

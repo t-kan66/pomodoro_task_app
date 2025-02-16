@@ -1,15 +1,18 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pomodoro_app/core/controllers/route_redirect_state.dart';
 
-final routeRedirectControllerProvider =
-    NotifierProvider<RouteRedirectController, bool>(() {
+final routeRedirectControllerProvider = AutoDisposeAsyncNotifierProvider<
+    RouteRedirectController, RouteRedirectState>(RouteRedirectController.new);
 
-      
-  return RouteRedirectController();
-});
-
-class RouteRedirectController extends Notifier<bool> {
+class RouteRedirectController
+    extends AutoDisposeAsyncNotifier<RouteRedirectState> {
   @override
-  bool build() {
-    return false;
+  RouteRedirectState build() {
+    return const RouteRedirectState(
+      launchState: LaunchingStatus(),
+      isSigning: false,
+    );
   }
+
+
 }
