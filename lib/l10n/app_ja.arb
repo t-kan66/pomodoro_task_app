@@ -7,5 +7,8 @@
     "appText": "アプリテキスト",
     "@appText": {
       "description": "appTextの説明"
-    }
+    },
+    "working_start": "開始",
+    "working_stop": "停止"
+
 }

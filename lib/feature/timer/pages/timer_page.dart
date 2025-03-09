@@ -1,10 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pomodoro_app/l10n/l10n_provider.dart';
+import 'package:pomodoro_app/routers/main_router.dart';
 import '../controllers/controller.dart';
-import '../widget/pomodoro_circle.dart';
 
 class TimerPage extends HookConsumerWidget {
   const TimerPage({super.key});
@@ -15,7 +13,18 @@ class TimerPage extends HookConsumerWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('ポモドーロタイマー'),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  //print('settings')
+                  ref.read(mainRouterProvider).go(SettingsPageRoute().location);
+                }),
+          ],
+
+          // title: const Text('Pomodoro Timer'),
+          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(234, 232, 232, 232),
         ),
         body: switch (timerState.status) {
           PomodoroStatus.work => const _WorkingWidget(),
@@ -29,34 +38,39 @@ class _WorkingWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = ref.watch(l10nProvider);
     final timerState = ref.watch(timerControllerProvider);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const PomodoroCircle(),
-          const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (!timerState.isRunning) ...[
-                ElevatedButton(
-                  onPressed: () => ref
-                      .read(timerControllerProvider.notifier)
-                      .startPomodoro(),
-                  child: const Text('開始'),
-                ),
-              ] else ...[
-                ElevatedButton(
-                  onPressed: () =>
-                      ref.read(timerControllerProvider.notifier).stopPomodoro(),
-                  child: const Text('ストップ'),
-                ),
+    return Container(
+      color: const Color.fromARGB(255, 198, 224, 166),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const PomodoroCircle(),
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (!timerState.isRunning) ...[
+                  ElevatedButton(
+                    onPressed: () => ref
+                        .read(timerControllerProvider.notifier)
+                        .startPomodoro(),
+                    child: Text(l10n.working_start),
+                  ),
+                ] else ...[
+                  ElevatedButton(
+                    onPressed: () => ref
+                        .read(timerControllerProvider.notifier)
+                        .stopPomodoro(),
+                    child: Text(l10n.working_stop),
+                  ),
+                ],
               ],
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -67,6 +81,7 @@ class _RestWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = ref.watch(l10nProvider);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -79,13 +94,13 @@ class _RestWidget extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () =>
                     ref.read(timerControllerProvider.notifier).startBreak(),
-                child: const Text('開始'),
+                child: Text(l10n.working_start),
               ),
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () =>
                     ref.read(timerControllerProvider.notifier).stopPomodoro(),
-                child: const Text('ストップ'),
+                child: Text(l10n.working_stop),
               ),
             ],
           ),
@@ -112,17 +127,17 @@ class PomodoroCircle extends HookConsumerWidget {
           height: 300,
           child: CircularProgressIndicator(
             value: 1 -
-                state.currentWorkingDuration.inSeconds /
-                    state.initialWorkingDuration.inSeconds,
-            strokeWidth: 10,
-            backgroundColor: Colors.grey[300],
-            color: Colors.green,
+                state.currentDurationTime.inSeconds /
+                    state.initalDurationTime.inSeconds,
+            strokeWidth: 30,
+            backgroundColor: const Color.fromARGB(255, 213, 196, 201),
+            color: const Color.fromARGB(255, 209, 138, 162),
           ),
         ),
         Column(
           children: [
             Text(
-              _formatTime(state.currentWorkingDuration),
+              _formatTime(state.currentDurationTime),
               style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,

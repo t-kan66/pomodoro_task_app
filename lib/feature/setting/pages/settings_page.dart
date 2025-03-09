@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
+
+import '../../../routers/main_router.dart';
 
 class SettingsPage extends HookConsumerWidget {
   const SettingsPage({super.key});
@@ -18,11 +19,11 @@ class SettingsPage extends HookConsumerWidget {
             title: const Text('一般'),
             tiles: [
               SettingsTile(
-                title: const Text('アカウント'),
-                leading: const Icon(Icons.person),
-                onPressed: (context) {
-                  // アカウント設定画面への遷移処理
-                },
+                title: const Text('タイマー設定'),
+                leading: const Icon(Icons.timer),
+                onPressed: (context) => ref
+                    .read(mainRouterProvider)
+                    .push(TimerSettingPageRoute().location),
               ),
               SettingsTile(
                 title: const Text('通知'),
@@ -33,6 +34,22 @@ class SettingsPage extends HookConsumerWidget {
               ),
             ],
           ),
+          SettingsSection(title: const Text('その他'), tiles: [
+            SettingsTile(
+              title: const Text('プライバシーポリシー'),
+              leading: const Icon(Icons.language),
+              onPressed: (context) {
+                // 言語設定画面への遷移処理
+              },
+            ),
+            SettingsTile(
+              title: const Text('テーマ'),
+              leading: const Icon(Icons.color_lens),
+              onPressed: (context) {
+                // テーマ設定画面への遷移処理
+              },
+            ),
+          ]),
         ],
       ),
     );

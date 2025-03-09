@@ -25,4 +25,12 @@ class TimerState with _$TimerState {
   }) = _TimerState;
 }
 
-extension TimerStateExtension on TimerState {}
+extension TimerStateExtension on TimerState {
+  Duration get currentDurationTime => status == PomodoroStatus.work
+      ? currentWorkingDuration
+      : currentBreakDuration;
+
+  Duration get initalDurationTime => status == PomodoroStatus.work
+      ? initialWorkingDuration
+      : initialBreakDuration;
+}

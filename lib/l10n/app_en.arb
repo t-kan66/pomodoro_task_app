@@ -1,5 +1,7 @@
 {
     "@@locale": "en",
     "appTitle": "Application Title",
-    "appText": "Application Text"
+    "appText": "Application Text",
+    "working_start": "Start",
+    "working_stop": "Stop"
   }
