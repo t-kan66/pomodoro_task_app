@@ -113,5 +113,21 @@ class TimerControllerController extends Notifier<TimerState> {
     state = state.copyWith(isRunning: true, timer: timer);
   }
 
-  // updateTimerの関数を起動する
+  // timerの設定を取得
+  void getTimerSettings() {
+    final timerSettings = _repository
+        .whenData((repository) => repository.getTimerSettings())
+        .value;
+
+    state = state.copyWith(
+      initialBreakDuration:
+          timerSettings?.breakDuration ?? const Duration(minutes: 5),
+      initialWorkingDuration:
+          timerSettings?.workingDuration ?? const Duration(minutes: 25),
+      currentBreakDuration:
+          timerSettings?.breakDuration ?? const Duration(minutes: 5),
+      currentWorkingDuration:
+          timerSettings?.workingDuration ?? const Duration(minutes: 25),
+    );
+  }
 }

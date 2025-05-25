@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
 import 'package:pomodoro_app/routers/main_router.dart';
@@ -12,13 +13,17 @@ class TimerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timerState = ref.watch(timerControllerProvider);
 
+    useEffect(() {
+      ref.read(timerSettingsControllerProvider.notifier).getSettings();
+      return null;
+    }, [timerState]);
+
     return Scaffold(
         appBar: AppBar(
           actions: [
             IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {
-                  //print('settings')
                   ref.read(mainRouterProvider).go(SettingsPageRoute().location);
                 }),
           ],
@@ -119,7 +124,6 @@ class PomodoroCircle extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(timerControllerProvider);
-
 
     return Stack(
       alignment: Alignment.center,

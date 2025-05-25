@@ -10,7 +10,7 @@ class TimerSettingsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(timerSettingNotifierProvider);
+    final state = ref.watch(timerSettingsControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +21,7 @@ class TimerSettingsPage extends HookConsumerWidget {
             onPressed: () {
               if (context.mounted) {
                 ref
-                    .read(timerSettingNotifierProvider.notifier)
+                    .read(timerSettingsControllerProvider.notifier)
                     .saveSettings()
                     .then((_) => Navigator.pop(context));
               }
@@ -45,7 +45,7 @@ class TimerSettingsPage extends HookConsumerWidget {
                           endMinutes: 25,
                           onMinutesChanged: (minutes) {
                             ref
-                                .read(timerSettingNotifierProvider.notifier)
+                                .read(timerSettingsControllerProvider.notifier)
                                 .updateWorkingDuration(
                                     Duration(minutes: minutes));
                           }));
@@ -62,7 +62,7 @@ class TimerSettingsPage extends HookConsumerWidget {
                           endMinutes: 5,
                           onMinutesChanged: (minutes) {
                             ref
-                                .read(timerSettingNotifierProvider.notifier)
+                                .read(timerSettingsControllerProvider.notifier)
                                 .updateWorkingDuration(
                                     Duration(minutes: minutes));
                           }));
@@ -80,7 +80,7 @@ class TimerSettingsPage extends HookConsumerWidget {
                           endCount: 10,
                           onCountChanged: (count) {
                             ref
-                                .read(timerSettingNotifierProvider.notifier)
+                                .read(timerSettingsControllerProvider.notifier)
                                 .updatePhaseCount(count);
                           }));
                 },

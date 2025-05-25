@@ -14,10 +14,7 @@ class TimerSettingController extends Notifier<TimerSettingState> {
 
   @override
   TimerSettingState build() {
-    return _repository
-            .whenData((repository) => repository.getTimerSettings())
-            .value ??
-        const TimerSettingState();
+    return getSettings();
   }
 
   // 作業時間を更新
@@ -40,13 +37,19 @@ class TimerSettingController extends Notifier<TimerSettingState> {
     _repository.when(
         data: (rep) {
           rep.setTimerSettings(state);
+
+          // 設定を保存した後、タイマーの状態を更新
+          ref.read(timerControllerProvider.notifier).getTimerSettings();
         },
         error: (error, stackTrace) {},
         loading: () => const CircularProgressIndicator());
   }
-}
 
-final timerSettingNotifierProvider =
-    NotifierProvider<TimerSettingController, TimerSettingState>(
-  TimerSettingController.new,
-);
+  // 設定を取得
+  TimerSettingState getSettings() {
+    return _repository
+            .whenData((repository) => repository.getTimerSettings())
+            .value ??
+        const TimerSettingState();
+  }
+}
