@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
 import 'package:pomodoro_app/routers/main_router.dart';
+import '../../setting/controllers/controller.dart';
 import '../controllers/controller.dart';
 
 class TimerPage extends HookConsumerWidget {
@@ -118,6 +119,7 @@ class PomodoroCircle extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(timerControllerProvider);
+
 
     return Stack(
       alignment: Alignment.center,

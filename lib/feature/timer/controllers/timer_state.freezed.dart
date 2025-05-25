@@ -14,6 +14,201 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+TimerSettingState _$TimerSettingStateFromJson(Map<String, dynamic> json) {
+  return _TimerSettingState.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TimerSettingState {
+  Duration get workingDuration => throw _privateConstructorUsedError;
+  Duration get breakDuration => throw _privateConstructorUsedError;
+  int get phaseCount => throw _privateConstructorUsedError;
+
+  /// Serializes this TimerSettingState to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TimerSettingState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TimerSettingStateCopyWith<TimerSettingState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TimerSettingStateCopyWith<$Res> {
+  factory $TimerSettingStateCopyWith(
+          TimerSettingState value, $Res Function(TimerSettingState) then) =
+      _$TimerSettingStateCopyWithImpl<$Res, TimerSettingState>;
+  @useResult
+  $Res call({Duration workingDuration, Duration breakDuration, int phaseCount});
+}
+
+/// @nodoc
+class _$TimerSettingStateCopyWithImpl<$Res, $Val extends TimerSettingState>
+    implements $TimerSettingStateCopyWith<$Res> {
+  _$TimerSettingStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TimerSettingState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? workingDuration = null,
+    Object? breakDuration = null,
+    Object? phaseCount = null,
+  }) {
+    return _then(_value.copyWith(
+      workingDuration: null == workingDuration
+          ? _value.workingDuration
+          : workingDuration // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      breakDuration: null == breakDuration
+          ? _value.breakDuration
+          : breakDuration // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      phaseCount: null == phaseCount
+          ? _value.phaseCount
+          : phaseCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TimerSettingStateImplCopyWith<$Res>
+    implements $TimerSettingStateCopyWith<$Res> {
+  factory _$$TimerSettingStateImplCopyWith(_$TimerSettingStateImpl value,
+          $Res Function(_$TimerSettingStateImpl) then) =
+      __$$TimerSettingStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({Duration workingDuration, Duration breakDuration, int phaseCount});
+}
+
+/// @nodoc
+class __$$TimerSettingStateImplCopyWithImpl<$Res>
+    extends _$TimerSettingStateCopyWithImpl<$Res, _$TimerSettingStateImpl>
+    implements _$$TimerSettingStateImplCopyWith<$Res> {
+  __$$TimerSettingStateImplCopyWithImpl(_$TimerSettingStateImpl _value,
+      $Res Function(_$TimerSettingStateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TimerSettingState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? workingDuration = null,
+    Object? breakDuration = null,
+    Object? phaseCount = null,
+  }) {
+    return _then(_$TimerSettingStateImpl(
+      workingDuration: null == workingDuration
+          ? _value.workingDuration
+          : workingDuration // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      breakDuration: null == breakDuration
+          ? _value.breakDuration
+          : breakDuration // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      phaseCount: null == phaseCount
+          ? _value.phaseCount
+          : phaseCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TimerSettingStateImpl implements _TimerSettingState {
+  const _$TimerSettingStateImpl(
+      {this.workingDuration = const Duration(minutes: 25),
+      this.breakDuration = const Duration(minutes: 5),
+      this.phaseCount = 4});
+
+  factory _$TimerSettingStateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TimerSettingStateImplFromJson(json);
+
+  @override
+  @JsonKey()
+  final Duration workingDuration;
+  @override
+  @JsonKey()
+  final Duration breakDuration;
+  @override
+  @JsonKey()
+  final int phaseCount;
+
+  @override
+  String toString() {
+    return 'TimerSettingState(workingDuration: $workingDuration, breakDuration: $breakDuration, phaseCount: $phaseCount)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TimerSettingStateImpl &&
+            (identical(other.workingDuration, workingDuration) ||
+                other.workingDuration == workingDuration) &&
+            (identical(other.breakDuration, breakDuration) ||
+                other.breakDuration == breakDuration) &&
+            (identical(other.phaseCount, phaseCount) ||
+                other.phaseCount == phaseCount));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, workingDuration, breakDuration, phaseCount);
+
+  /// Create a copy of TimerSettingState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TimerSettingStateImplCopyWith<_$TimerSettingStateImpl> get copyWith =>
+      __$$TimerSettingStateImplCopyWithImpl<_$TimerSettingStateImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TimerSettingStateImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TimerSettingState implements TimerSettingState {
+  const factory _TimerSettingState(
+      {final Duration workingDuration,
+      final Duration breakDuration,
+      final int phaseCount}) = _$TimerSettingStateImpl;
+
+  factory _TimerSettingState.fromJson(Map<String, dynamic> json) =
+      _$TimerSettingStateImpl.fromJson;
+
+  @override
+  Duration get workingDuration;
+  @override
+  Duration get breakDuration;
+  @override
+  int get phaseCount;
+
+  /// Create a copy of TimerSettingState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TimerSettingStateImplCopyWith<_$TimerSettingStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 /// @nodoc
 mixin _$TimerState {
   Duration get initialWorkingDuration =>

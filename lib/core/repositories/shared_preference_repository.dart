@@ -1,18 +1,44 @@
+import 'dart:convert';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// shared preference のrepository
+import '../../feature/timer/controllers/controller.dart';
+
+final sharedPreferenceRepositoryProvider =
+    FutureProvider<SharedPreferenceRepository>(
+  (ref) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    return SharedPreferenceRepository(sharedPreferences);
+  },
+);
+
+enum SharedPreferenceKey {
+  timerSettings,
+}
+
 class SharedPreferenceRepository {
   final SharedPreferences _sharedPreferences;
 
   SharedPreferenceRepository(this._sharedPreferences);
 
-  // ユーザー名を取得
-  String getUserName() {
-    return _sharedPreferences.getString('user_name') ?? '';
+  // TimerSettingStateを取得
+  TimerSettingState getTimerSettings() {
+    final jsonString =
+        _sharedPreferences.getString(SharedPreferenceKey.timerSettings.name);
+    if (jsonString == null) {
+      return const TimerSettingState(); // デフォルト値を返す
+    }
+    final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+    return TimerSettingState.fromJson(jsonMap);
   }
 
-  // ユーザー名を保存
-  Future<void> setUserName(String userName) async {
-    await _sharedPreferences.setString('user_name', userName);
+  // TimerSettingStateを保存
+  Future<void> setTimerSettings(TimerSettingState settings) async {
+    final jsonString = json.encode(settings.toJson());
+    await _sharedPreferences.setString(
+      SharedPreferenceKey.timerSettings.name,
+      jsonString,
+    );
   }
 }

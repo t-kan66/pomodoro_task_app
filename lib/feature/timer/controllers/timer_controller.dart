@@ -4,13 +4,23 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/feature/timer/controllers/timer_state.dart';
 
+import '../../../core/repositories/repositories.dart';
+
 final timerControllerProvider =
     NotifierProvider<TimerControllerController, TimerState>(
         TimerControllerController.new);
 
 class TimerControllerController extends Notifier<TimerState> {
+  AsyncValue<SharedPreferenceRepository> get _repository =>
+      ref.watch(sharedPreferenceRepositoryProvider);
+
   @override
   TimerState build() {
+    // 開始時に保存されたデータを取得する
+    final timerSettings = _repository
+        .whenData((repository) => repository.getTimerSettings())
+        .value;
+
     late final Duration intervalTime;
     // 検証モードの場合は1分間隔で更新する
     if (kDebugMode) {
@@ -19,7 +29,16 @@ class TimerControllerController extends Notifier<TimerState> {
       intervalTime = const Duration(seconds: 1);
     }
 
-    return TimerState(intervalDuration: intervalTime);
+    return TimerState(
+        initialBreakDuration:
+            timerSettings?.breakDuration ?? const Duration(minutes: 5),
+        initialWorkingDuration:
+            timerSettings?.workingDuration ?? const Duration(minutes: 25),
+        currentBreakDuration:
+            timerSettings?.breakDuration ?? const Duration(minutes: 5),
+        currentWorkingDuration:
+            timerSettings?.workingDuration ?? const Duration(minutes: 25),
+        intervalDuration: intervalTime);
   }
 
   void startPomodoro() {

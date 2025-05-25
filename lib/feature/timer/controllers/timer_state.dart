@@ -1,13 +1,25 @@
 import 'dart:async';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'timer_state.freezed.dart';
+part 'timer_state.g.dart';
 
 // ポモドーロの状態を管理する
 enum PomodoroStatus {
   work,
   rest,
+}
+
+@freezed
+class TimerSettingState with _$TimerSettingState {
+  const factory TimerSettingState({
+    @Default(Duration(minutes: 25)) Duration workingDuration,
+    @Default(Duration(minutes: 5)) Duration breakDuration,
+    @Default(4) int phaseCount,
+  }) = _TimerSettingState;
+
+  factory TimerSettingState.fromJson(Map<String, dynamic> json) =>
+      _$TimerSettingStateFromJson(json);
 }
 
 @freezed
