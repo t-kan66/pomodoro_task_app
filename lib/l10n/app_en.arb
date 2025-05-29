@@ -3,5 +3,13 @@
     "appTitle": "Application Title",
     "appText": "Application Text",
     "working_start": "Start",
-    "working_stop": "Stop"
-  }
+    "working_stop": "Stop",
+    "pomodoro_title": "Pomodoro Timer",
+    "@pomodoro_title": {
+      "description": "Title for the Pomodoro Timer"
+    },
+    "start_pomodoro": "Start Pomodoro",
+    "@start_pomodoro": {
+      "description": "Text for the button to start the Pomodoro"
+    }
+}
