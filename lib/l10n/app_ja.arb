@@ -8,6 +8,7 @@
     "@appText": {
       "description": "appTextの説明"
     },
+    "minutes": "分",
     "working_start": "開始",
     "working_stop": "停止",
     "pomodoro_title": "ポモドーロタイマー",
@@ -17,5 +18,33 @@
     "start_pomodoro": "ポモドーロを開始",
     "@start_pomodoro": {
       "description": "ポモドーロを開始するボタンのテキスト"
+    },
+    "working_phase": "作業フェーズ",
+    "@working_phase": {
+      "description": "作業フェーズのラベル"
+    },
+    "resting_phase": "休憩フェーズ",
+    "@resting_phase": {
+      "description": "休憩フェーズのラベル"
+    },
+    "cycles": "サイクル",
+    "@cycles": {
+      "description": "サイクルのラベル"
+    },
+    "close_confirm_title": "確認",
+    "@close_confirm_title": {
+      "description": "タイマー停止確認ダイアログのタイトル"
+    },
+    "close_confirm_message": "タイマーをストップし、画面を閉じます。",
+    "@close_confirm_message": {
+      "description": "タイマー停止確認ダイアログの本文"
+    },
+    "yes": "はい",
+    "@yes": {
+      "description": "はいボタン"
+    },
+    "no": "いいえ",
+    "@no": {
+      "description": "いいえボタン"
     }
 }
