@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/feature/timer/widgets/progress_circles.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
+import 'package:pomodoro_app/routers/main_router.dart';
 import '../../setting/controllers/controller.dart';
 import '../controllers/controller.dart';
 import 'dart:math' as math;
@@ -12,94 +13,195 @@ class TimerPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = ref.watch(l10nProvider); // l10nを定義
+    final l10n = ref.watch(l10nProvider);
     final timerState = ref.watch(timerControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          l10n.pomodoro_title,
-          style:
-              const TextStyle(fontWeight: FontWeight.bold, fontSize: 26), // 大きめ
-        ), // l10nを使用
+        // title: Text(
+        //   l10n.pomodoro_title,
+        //   style:
+        //       const TextStyle(fontWeight: FontWeight.bold, fontSize: 26), // 大きめ
+        // ),
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.timer_outlined, color: Colors.black),
+          onPressed: () {
+            ref.read(mainRouterProvider).go(
+                  TimerSettingPageRoute().location,
+                );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.black),
+            onPressed: () {
+              ref.read(mainRouterProvider).go(
+                    SettingsPageRoute().location,
+                  );
+            },
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 32.0, vertical: 32.0), // 余白を大きく
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 32.0, vertical: 32.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '${l10n.working_phase}',
-                    style: const TextStyle(
-                      fontSize: 40, // 大きめ
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    '${timerState.initalDurationTime.inMinutes} ${l10n.minutes}',
-                    style: const TextStyle(
-                      fontSize: 34, // 大きめ
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  Text(
-                    l10n.resting_phase,
-                    style: const TextStyle(
-                      fontSize: 40, // 大きめ
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    '${timerState.initialBreakDuration.inMinutes} ${l10n.minutes}',
-                    style: const TextStyle(
-                      fontSize: 34, // 大きめ
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  // 丸型進捗バー表示
-                  const SizedBox(height: 48),
-                  const ProgressCircle(),
-                  const SizedBox(height: 32),
-                  const SizedBox(height: 60),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 20), // 大きめ
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(36),
+                  // タイトルをカードの上部に追加
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Text(
+                      l10n.pomodoro_title,
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        letterSpacing: 1.2,
                       ),
                     ),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        enableDrag: false,
-                        isScrollControlled: true,
-                        useSafeArea: true,
-                        builder: (context) => const TimerModal(),
-                      );
-                    },
-                    child: Text(
-                      l10n.start_pomodoro,
-                      style: const TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold), // 大きめ
-                    ), // l10nを使用
                   ),
+                  // 作業・休憩時間・フェーズ数を横長カードで並べる
+                  InkWell(
+                    borderRadius: BorderRadius.circular(32),
+                    onTap: () {
+                      ref.read(mainRouterProvider).go(
+                            TimerSettingPageRoute().location,
+                          );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 28, horizontal: 32),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF7F7F7),
+                        borderRadius: BorderRadius.circular(32),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.03),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // 作業
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l10n.working_phase,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                '${timerState.initalDurationTime.inMinutes} ',
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // 休憩
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l10n.resting_phase,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                '${timerState.initialBreakDuration.inMinutes}',
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // サイクル
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l10n.cycles,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                '${timerState.maxPomodoros}',
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  // const ProgressCircle(),
+                  const SizedBox(height: 32),
+                  // 開始ボタンもカード下に配置
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(36),
+                          ),
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            enableDrag: false,
+                            isScrollControlled: true,
+                            useSafeArea: true,
+                            builder: (context) => const TimerModal(),
+                          );
+                        },
+                        child: Text(
+                          l10n.start_pomodoro,
+                          style: const TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),

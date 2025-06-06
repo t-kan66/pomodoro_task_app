@@ -19,13 +19,13 @@
     "@start_pomodoro": {
       "description": "ポモドーロを開始するボタンのテキスト"
     },
-    "working_phase": "作業フェーズ",
+    "working_phase": "作業",
     "@working_phase": {
-      "description": "作業フェーズのラベル"
+      "description": "作業のラベル"
     },
-    "resting_phase": "休憩フェーズ",
+    "resting_phase": "休憩",
     "@resting_phase": {
-      "description": "休憩フェーズのラベル"
+      "description": "休憩のラベル"
     },
     "cycles": "サイクル",
     "@cycles": {

@@ -13,11 +13,11 @@
     "@start_pomodoro": {
       "description": "Text for the button to start the Pomodoro"
     },
-    "working_phase": "Working Phase",
+    "working_phase": "Working",
     "@working_phase": {
       "description": "Label for the working phase"
     },
-    "resting_phase": "Resting Phase",
+    "resting_phase": "Resting",
     "@resting_phase": {
       "description": "Label for the resting phase"
     },
