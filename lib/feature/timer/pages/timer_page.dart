@@ -5,6 +5,7 @@ import 'package:pomodoro_app/feature/timer/widgets/progress_circles.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
 import '../../setting/controllers/controller.dart';
 import '../controllers/controller.dart';
+import 'dart:math' as math;
 
 class TimerPage extends HookConsumerWidget {
   const TimerPage({super.key});
@@ -129,6 +130,7 @@ class TimerModal extends HookConsumerWidget {
             switch (timerState.status) {
               PomodoroStatus.work => const _WorkingWidget(),
               PomodoroStatus.rest => const _RestWidget(),
+              PomodoroStatus.completed => const _CompletedWidget(), // 追加
             },
             IconButton(
               icon: const Icon(Icons.close),
@@ -372,6 +374,72 @@ class _RestWidget extends ConsumerWidget {
   }
 }
 
+class _CompletedWidget extends ConsumerWidget {
+  const _CompletedWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = ref.watch(l10nProvider);
+
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.emoji_events, color: Colors.amber[700], size: 80),
+            const SizedBox(height: 32),
+            Text(
+              l10n.pomodoro_completed_title,
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.pomodoro_completed_message,
+              style: const TextStyle(
+                fontSize: 22,
+                color: Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              onPressed: () {
+                // タイマー状態を初期化
+                ref.read(timerControllerProvider.notifier).reset();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                l10n.close,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class PomodoroCircle extends HookConsumerWidget {
   const PomodoroCircle({super.key});
 
@@ -381,9 +449,10 @@ class PomodoroCircle extends HookConsumerWidget {
 
     // ステータスによって色を切り替え
     final isWork = state.status == PomodoroStatus.work;
-    final progressColor = isWork
-        ? const Color(0xFFE57373) // アクティブな赤系
-        : const Color(0xFF4DD0E1); // リラックスできる青緑系
+    final List<Color> gradientColors = isWork
+        ? [const Color(0xFFE57373), const Color(0xFFFFB74D)] // 赤→オレンジ
+        : [const Color(0xFF4DD0E1), const Color(0xFF81C784)]; // 青緑→グリーン
+
     final bgColor = isWork
         ? const Color(0xFFFFEBEE) // 赤系の淡い背景
         : const Color(0xFFE0F7FA); // 青緑系の淡い背景
@@ -397,16 +466,37 @@ class PomodoroCircle extends HookConsumerWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
+              // 背景サークル（グラデーションなし、単色）
               SizedBox(
                 width: 200,
                 height: 200,
                 child: CircularProgressIndicator(
-                  value: 1 -
-                      state.currentDurationTime.inSeconds /
-                          state.initalDurationTime.inSeconds,
-                  strokeWidth: 40, // 縁を太く
-                  backgroundColor: bgColor,
-                  color: progressColor,
+                  value: 1.0,
+                  strokeWidth: 40,
+                  backgroundColor: Colors.transparent,
+                  color: bgColor,
+                ),
+              ),
+              // グラデーション進捗
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return SweepGradient(
+                    startAngle: -math.pi / 2,
+                    endAngle: 3 * math.pi / 2,
+                    colors: gradientColors,
+                  ).createShader(bounds);
+                },
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: CircularProgressIndicator(
+                    value: 1 -
+                        state.currentDurationTime.inSeconds /
+                            state.initalDurationTime.inSeconds,
+                    strokeWidth: 40,
+                    backgroundColor: Colors.transparent,
+                    color: Colors.white, // この色はマスクされる
+                  ),
                 ),
               ),
               Column(

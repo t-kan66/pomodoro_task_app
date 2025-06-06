@@ -40,5 +40,17 @@
     "no": "No",
     "@no": {
       "description": "No button"
+    },
+    "pomodoro_completed_title": "Pomodoro Completed!",
+    "@pomodoro_completed_title": {
+      "description": "Title for pomodoro completed"
+    },
+    "pomodoro_completed_message": "Great job!\n Take a good break.",
+    "@pomodoro_completed_message": {
+      "description": "Message for pomodoro completed"
+    },
+    "close": "Close",
+    "@close": {
+      "description": "Close button"
     }
 }

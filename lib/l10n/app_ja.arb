@@ -46,5 +46,17 @@
     "no": "いいえ",
     "@no": {
       "description": "いいえボタン"
+    },
+    "pomodoro_completed_title": "ポモドーロ完了！",
+    "@pomodoro_completed_title": {
+      "description": "ポモドーロ完了時のタイトル"
+    },
+    "pomodoro_completed_message": "お疲れさまでした！\nしっかり休憩しましょう！",
+    "@pomodoro_completed_message": {
+      "description": "ポモドーロ完了時のメッセージ"
+    },
+    "close": "閉じる",
+    "@close": {
+      "description": "閉じるボタン"
     }
 }
