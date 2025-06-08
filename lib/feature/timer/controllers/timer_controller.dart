@@ -4,7 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/feature/timer/controllers/timer_state.dart';
 
+import '../../../core/controllers/controller.dart';
+import '../../../core/infras/infras.dart';
 import '../../../core/repositories/repositories.dart';
+import '../../../gen/assets.gen.dart';
 
 final timerControllerProvider =
     NotifierProvider<TimerControllerController, TimerState>(
@@ -41,7 +44,7 @@ class TimerControllerController extends Notifier<TimerState> {
         intervalDuration: intervalTime);
   }
 
-  void startPomodoro() {
+  void startPomodoro() async {
     // 開始時の処理を追加
     if (state.isRunning) return;
 

@@ -5,6 +5,8 @@ import 'package:pomodoro_app/feature/timer/widgets/progress_circles.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
 import 'package:pomodoro_app/routers/main_router.dart';
 import '../../../core/controllers/controller.dart';
+import '../../../core/infras/infras.dart';
+import '../../../gen/assets.gen.dart';
 import '../../setting/controllers/controller.dart';
 import '../controllers/controller.dart';
 import 'dart:math' as math;
@@ -16,6 +18,9 @@ class TimerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = ref.watch(l10nProvider);
     final timerState = ref.watch(timerControllerProvider);
+
+    // 追加: カウントダウン中かどうかの状態
+    final countdowning = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -186,15 +191,37 @@ class TimerPage extends HookConsumerWidget {
                             borderRadius: BorderRadius.circular(36),
                           ),
                         ),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            enableDrag: false,
-                            isScrollControlled: true,
-                            useSafeArea: true,
-                            builder: (context) => const TimerModal(),
-                          );
-                        },
+                        onPressed: countdowning.value
+                            ? null
+                            : () async {
+                                // サウンドONなら3秒前からカウントSEを鳴らす
+                                final soundOn = ref.read(soundSettingProvider);
+                                final soundManager =
+                                    ref.read(soundManagerProvider);
+
+                                if (soundOn) {
+                                  countdowning.value = true;
+                                  for (int i = 3; i > 0; i--) {
+                                    final sePath = Assets.sounds.countdown
+                                        .replaceFirst('assets/', '');
+
+                                    await soundManager.playSe(sePath);
+                                    await Future.delayed(
+                                        const Duration(seconds: 1));
+                                  }
+                                  countdowning.value = false;
+                                }
+                                // モーダルを開く
+                                if (context.mounted) {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    enableDrag: false,
+                                    isScrollControlled: true,
+                                    useSafeArea: true,
+                                    builder: (context) => const TimerModal(),
+                                  );
+                                }
+                              },
                         child: Text(
                           l10n.start_pomodoro,
                           style: const TextStyle(
@@ -223,8 +250,14 @@ class TimerModal extends HookConsumerWidget {
 
     useEffect(() {
       ref.read(timerSettingsControllerProvider.notifier).getSettings();
+      // モーダル初回表示時にポモドーロ開始
+      if (!timerState.isRunning) {
+        Future.microtask(() {
+          ref.read(timerControllerProvider.notifier).startPomodoro();
+        });
+      }
       return null;
-    }, [timerState]);
+    }, []);
 
     return PopScope(
       canPop: !timerState.isRunning,
@@ -234,7 +267,7 @@ class TimerModal extends HookConsumerWidget {
             switch (timerState.status) {
               PomodoroStatus.work => const _WorkingWidget(),
               PomodoroStatus.rest => const _RestWidget(),
-              PomodoroStatus.completed => const _CompletedWidget(), // 追加
+              PomodoroStatus.completed => const _CompletedWidget(),
             },
             IconButton(
               icon: const Icon(Icons.close),
@@ -246,13 +279,13 @@ class TimerModal extends HookConsumerWidget {
                       return _CloseConfirmDialog(onClose: () {
                         ref
                             .read(timerControllerProvider.notifier)
-                            .stopPomodoro(); // タイマーを停止
-                        Navigator.of(context).pop(); // モーダルを閉じる
+                            .stopPomodoro();
+                        Navigator.of(context).pop();
                       });
                     },
                   );
                 } else {
-                  Navigator.of(context).pop(); // タイマーが動いていない場合はそのまま閉じる
+                  Navigator.of(context).pop();
                 }
               },
               color: const Color.fromARGB(255, 0, 0, 0),
