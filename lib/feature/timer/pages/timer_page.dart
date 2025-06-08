@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pomodoro_app/feature/timer/widgets/progress_circles.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
 import 'package:pomodoro_app/routers/main_router.dart';
 import '../../../core/controllers/controller.dart';
@@ -345,24 +344,16 @@ class _WorkingWidget extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // 時間表示をPomodoroCircleの外に移動
             Text(
-              l10n.working_phase,
+              _formatTime(timerState.currentDurationTime),
               style: const TextStyle(
-                fontSize: 32,
+                fontSize: 92,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              '${timerState.initalDurationTime.inMinutes} ${l10n.minutes}',
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
             const PomodoroCircle(),
             const SizedBox(height: 40),
             Row(
@@ -420,6 +411,12 @@ class _WorkingWidget extends ConsumerWidget {
       ),
     );
   }
+
+  String _formatTime(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
 }
 
 class _RestWidget extends ConsumerWidget {
@@ -438,24 +435,16 @@ class _RestWidget extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // 時間表示をPomodoroCircleの外に移動
             Text(
-              l10n.resting_phase,
+              _formatTime(timerState.currentDurationTime),
               style: const TextStyle(
-                fontSize: 32,
+                fontSize: 92,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              '${timerState.initialBreakDuration.inMinutes} ${l10n.minutes}',
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
             const PomodoroCircle(),
             const SizedBox(height: 40),
             Row(
@@ -509,6 +498,12 @@ class _RestWidget extends ConsumerWidget {
       ),
     );
   }
+
+  String _formatTime(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
 }
 
 class _CompletedWidget extends ConsumerWidget {
@@ -526,8 +521,6 @@ class _CompletedWidget extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.emoji_events, color: Colors.amber[700], size: 80),
-            const SizedBox(height: 32),
             Text(
               l10n.pomodoro_completed_title,
               style: const TextStyle(
@@ -537,6 +530,8 @@ class _CompletedWidget extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 24),
+            Icon(Icons.emoji_events, color: Colors.amber[700], size: 80),
             const SizedBox(height: 16),
             Text(
               l10n.pomodoro_completed_message,
@@ -583,21 +578,22 @@ class PomodoroCircle extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(timerControllerProvider);
+    final l10n = ref.watch(l10nProvider);
 
     // ステータスによって色を切り替え
     final isWork = state.status == PomodoroStatus.work;
     final List<Color> gradientColors = isWork
-        ? [const Color(0xFFE57373), const Color(0xFFFFB74D)] // 赤→オレンジ
-        : [const Color(0xFF4DD0E1), const Color(0xFF81C784)]; // 青緑→グリーン
+        ? [const Color(0xFFE57373), const Color(0xFFFFB74D)]
+        : [const Color(0xFF4DD0E1), const Color(0xFF81C784)];
 
     final bgColor = isWork
-        ? const Color(0xFFFFEBEE) // 赤系の淡い背景
-        : const Color(0xFFE0F7FA); // 青緑系の淡い背景
+        ? const Color(0xFFFFEBEE)
+        : const Color(0xFFE0F7FA);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(120), // 角を丸く
+        borderRadius: BorderRadius.circular(120),
         child: Container(
           color: Colors.transparent,
           child: Stack(
@@ -617,11 +613,15 @@ class PomodoroCircle extends HookConsumerWidget {
               // グラデーション進捗
               ShaderMask(
                 shaderCallback: (Rect bounds) {
+                  final List<Color> sweepColors = [
+                    ...gradientColors,
+                    gradientColors.first
+                  ];
                   return SweepGradient(
-                    startAngle: 0, // 0に変更
+                    startAngle: 0,
                     endAngle: 2 * math.pi,
-                    colors: gradientColors,
-                    transform: GradientRotation(-math.pi / 2), // -90度回転で開始位置を上に
+                    colors: sweepColors,
+                    transform: const GradientRotation(-math.pi / 2),
                   ).createShader(bounds);
                 },
                 child: SizedBox(
@@ -633,25 +633,25 @@ class PomodoroCircle extends HookConsumerWidget {
                             state.initalDurationTime.inSeconds,
                     strokeWidth: 40,
                     backgroundColor: Colors.transparent,
-                    color: Colors.white, // この色はマスクされる
+                    color: Colors.white,
                   ),
                 ),
               ),
+              // 円の中にL10n対応の作業/休憩テキストとサイクル数
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 8),
                   Text(
-                    _formatTime(state.currentDurationTime),
+                    isWork ? l10n.working_phase : l10n.resting_phase,
                     style: const TextStyle(
-                      fontSize: 36,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 8),
                   Text(
-                    '${state.completedPomodoros} / 4',
+                    '${state.completedPomodoros} / ${state.maxPomodoros}',
                     style: const TextStyle(
                       fontSize: 20,
                       color: Colors.black54,
@@ -664,12 +664,6 @@ class PomodoroCircle extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _formatTime(Duration duration) {
-    final minutes = duration.inMinutes;
-    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
   }
 }
 
