@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/feature/timer/widgets/progress_circles.dart';
 import 'package:pomodoro_app/l10n/l10n_provider.dart';
 import 'package:pomodoro_app/routers/main_router.dart';
+import '../../../core/controllers/controller.dart';
 import '../../setting/controllers/controller.dart';
 import '../controllers/controller.dart';
 import 'dart:math' as math;
@@ -167,9 +168,10 @@ class TimerPage extends HookConsumerWidget {
                       ),
                     ),
                   ),
+                  // サウンドON/OFF設定スイッチ
+                  const SizedBox(height: 20),
+                  _SoundSwitch(),
                   const SizedBox(height: 48),
-                  // const ProgressCircle(),
-                  const SizedBox(height: 32),
                   // 開始ボタンもカード下に配置
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -583,9 +585,10 @@ class PomodoroCircle extends HookConsumerWidget {
               ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return SweepGradient(
-                    startAngle: -math.pi / 2,
-                    endAngle: 3 * math.pi / 2,
+                    startAngle: 0, // 0に変更
+                    endAngle: 2 * math.pi,
                     colors: gradientColors,
+                    transform: GradientRotation(-math.pi / 2), // -90度回転で開始位置を上に
                   ).createShader(bounds);
                 },
                 child: SizedBox(
@@ -634,5 +637,36 @@ class PomodoroCircle extends HookConsumerWidget {
     final minutes = duration.inMinutes;
     final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+}
+
+// サウンドON/OFFスイッチWidget
+class _SoundSwitch extends HookConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Repository層から設定を取得・保存するProviderを利用する想定
+    final soundOn = ref.watch(soundSettingProvider);
+    final soundNotifier = ref.read(soundSettingProvider.notifier);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          soundOn ? Icons.volume_up : Icons.volume_off,
+          color: Colors.black87,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          soundOn ? 'サウンドON' : 'サウンドOFF',
+          style: const TextStyle(fontSize: 18, color: Colors.black87),
+        ),
+        const SizedBox(width: 8),
+        Switch(
+          value: soundOn,
+          onChanged: (v) => soundNotifier.setSoundOn(v),
+          activeColor: Colors.black,
+        ),
+      ],
+    );
   }
 }
