@@ -17,6 +17,7 @@ class TimerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = ref.watch(l10nProvider);
     final timerState = ref.watch(timerControllerProvider);
+    final soundSetting = ref.watch(soundSettingProvider);
 
     // 追加: カウントダウン中かどうかの状態
     final countdowning = useState(false);
@@ -198,7 +199,7 @@ class TimerPage extends HookConsumerWidget {
                                 final soundManager =
                                     ref.read(soundManagerProvider);
 
-                                if (soundOn) {
+                                if (soundSetting.soundOn) {
                                   countdowning.value = true;
                                   for (int i = 3; i > 0; i--) {
                                     final sePath = Assets.sounds.countdown
@@ -586,9 +587,7 @@ class PomodoroCircle extends HookConsumerWidget {
         ? [const Color(0xFFE57373), const Color(0xFFFFB74D)]
         : [const Color(0xFF4DD0E1), const Color(0xFF81C784)];
 
-    final bgColor = isWork
-        ? const Color(0xFFFFEBEE)
-        : const Color(0xFFE0F7FA);
+    final bgColor = isWork ? const Color(0xFFFFEBEE) : const Color(0xFFE0F7FA);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -671,25 +670,25 @@ class PomodoroCircle extends HookConsumerWidget {
 class _SoundSwitch extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Repository層から設定を取得・保存するProviderを利用する想定
-    final soundOn = ref.watch(soundSettingProvider);
+    // SoundSettingState型に対応
+    final soundSetting = ref.watch(soundSettingProvider);
     final soundNotifier = ref.read(soundSettingProvider.notifier);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          soundOn ? Icons.volume_up : Icons.volume_off,
+          soundSetting.soundOn ? Icons.volume_up : Icons.volume_off,
           color: Colors.black87,
         ),
         const SizedBox(width: 8),
         Text(
-          soundOn ? 'サウンドON' : 'サウンドOFF',
+          soundSetting.soundOn ? 'サウンドON' : 'サウンドOFF',
           style: const TextStyle(fontSize: 18, color: Colors.black87),
         ),
         const SizedBox(width: 8),
         Switch(
-          value: soundOn,
+          value: soundSetting.soundOn,
           onChanged: (v) => soundNotifier.setSoundOn(v),
           activeColor: Colors.black,
         ),
