@@ -2,6 +2,55 @@
     "@@locale": "en",
     "appTitle": "Application Title",
     "appText": "Application Text",
+    "minutes": "minutes",
     "working_start": "Start",
-    "working_stop": "Stop"
-  }
+    "working_stop": "Stop",
+    "pomodoro_title": "Pomodoro Timer",
+    "@pomodoro_title": {
+      "description": "Title for the Pomodoro Timer"
+    },
+    "start_pomodoro": "Start Pomodoro",
+    "@start_pomodoro": {
+      "description": "Text for the button to start the Pomodoro"
+    },
+    "working_phase": "Working",
+    "@working_phase": {
+      "description": "Label for the working phase"
+    },
+    "resting_phase": "Resting",
+    "@resting_phase": {
+      "description": "Label for the resting phase"
+    },
+    "cycles": "cycles",
+    "@cycles": {
+      "description": "Label for cycles"
+    },
+    "close_confirm_title": "Confirmation",
+    "@close_confirm_title": {
+      "description": "Title for timer stop confirmation dialog"
+    },
+    "close_confirm_message": "Stop the timer and close the screen.",
+    "@close_confirm_message": {
+      "description": "Message for timer stop confirmation dialog"
+    },
+    "yes": "Yes",
+    "@yes": {
+      "description": "Yes button"
+    },
+    "no": "No",
+    "@no": {
+      "description": "No button"
+    },
+    "pomodoro_completed_title": "Pomodoro Completed!",
+    "@pomodoro_completed_title": {
+      "description": "Title for pomodoro completed"
+    },
+    "pomodoro_completed_message": "Great job!\n Take a good break.",
+    "@pomodoro_completed_message": {
+      "description": "Message for pomodoro completed"
+    },
+    "close": "Close",
+    "@close": {
+      "description": "Close button"
+    }
+}

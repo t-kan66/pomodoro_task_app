@@ -8,6 +8,7 @@ part 'timer_state.g.dart';
 enum PomodoroStatus {
   work,
   rest,
+  completed, // 追加
 }
 
 @freezed
@@ -34,6 +35,7 @@ class TimerState with _$TimerState {
     @Default(null) Timer? timer,
     @Default(0) int completedPomodoros, // 完了したポモドーロの数
     @Default(PomodoroStatus.work) PomodoroStatus status, // ポモドーロの状態
+    @Default(4) int maxPomodoros, // 最大ポモドーロ数（追加、必要に応じて）
   }) = _TimerState;
 }
 
@@ -45,4 +47,7 @@ extension TimerStateExtension on TimerState {
   Duration get initalDurationTime => status == PomodoroStatus.work
       ? initialWorkingDuration
       : initialBreakDuration;
+
+  // ポモドーロ完了判定
+  bool get isCompleted => completedPomodoros >= maxPomodoros;
 }
