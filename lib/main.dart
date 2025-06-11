@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'app/myapp.dart';
 import 'firebase_options_dev.dart' as dev_options;
 import 'firebase_options_prod.dart' as prod_options;
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +23,13 @@ void main() async {
     log('Firebase.initializeApp() completed ${value.options.appId}');
   });
 
-  // Firebase Analyticsの初期化
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  // Remote Configの初期化
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(seconds: 10),
+    minimumFetchInterval: const Duration(hours: 1),
+  ));
+  await remoteConfig.fetchAndActivate();
 
   runApp(const ProviderScope(child: MyApp()));
 }
