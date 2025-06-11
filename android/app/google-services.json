@@ -7,6 +7,44 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1032636817245:android:972eecf650212c3e7012b4",
+        "android_client_info": {
+          "package_name": "com.example.pomodoro_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdb9dRGn2rlOgyDfVvjcQas5xfu52tsGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032636817245:android:33a9d30896b9bb7b7012b4",
+        "android_client_info": {
+          "package_name": "com.tkan66.pomodoro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdb9dRGn2rlOgyDfVvjcQas5xfu52tsGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1032636817245:android:f44ea5e1b23e9f0c7012b4",
         "android_client_info": {
           "package_name": "com.tkan66.poromodo"
