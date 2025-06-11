@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:pomodoro_app/l10n/app_localizations.dart';
 import 'package:pomodoro_app/routers/main_router.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../feature/timer/pages/page.dart';
 import '../../core/controllers/update_controller.dart';
+import '../core/controllers/controller.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -32,14 +31,16 @@ class MyApp extends ConsumerWidget {
         return FutureBuilder<UpdateInfo>(
           future: appUpdateController.getUpdateInfo(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData) {
               final updateInfo = snapshot.data!;
               if (updateInfo.updateType == 2) {
                 // 強制アップデートダイアログ
                 return ForceUpdateDialog(updateInfo: updateInfo);
               } else if (updateInfo.updateType == 1) {
                 // 任意アップデートダイアログ
-                return OptionalUpdateDialog(updateInfo: updateInfo, child: child!);
+                return OptionalUpdateDialog(
+                    updateInfo: updateInfo, child: child!);
               }
             }
             return child ?? const SizedBox.shrink();
@@ -70,7 +71,6 @@ class ForceUpdateDialog extends StatelessWidget {
           child: const Text('アップデート'),
         ),
       ],
-      barrierDismissible: false,
     );
   }
 }
@@ -78,7 +78,8 @@ class ForceUpdateDialog extends StatelessWidget {
 class OptionalUpdateDialog extends StatelessWidget {
   final UpdateInfo updateInfo;
   final Widget child;
-  const OptionalUpdateDialog({required this.updateInfo, required this.child, super.key});
+  const OptionalUpdateDialog(
+      {required this.updateInfo, required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {

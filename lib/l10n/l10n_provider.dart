@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pomodoro_app/l10n/app_localizations.dart';
 
 // https://codewithandrea.com/articles/app-localizations-outside-widgets-riverpod/
 /// provider used to access the AppLocalizations object for the current locale

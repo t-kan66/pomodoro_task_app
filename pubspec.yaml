@@ -44,6 +44,7 @@ dependencies:
   #firebase
   firebase_core: ^3.9.0
   firebase_analytics: ^11.1.0
+  firebase_remote_config: ^5.4.5
 
   #router
   go_router: ^14.6.2

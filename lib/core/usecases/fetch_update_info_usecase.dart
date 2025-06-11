@@ -1,6 +1,8 @@
-import '../../repositories/update_repository.dart';
-import '../../data_stores/remote_config_data_store.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../controllers/controller.dart';
 import '../controllers/update_controller.dart';
+import '../repositories/repositories.dart';
 
 class FetchUpdateInfoUsecase {
   final UpdateRepository repository;
@@ -10,7 +12,6 @@ class FetchUpdateInfoUsecase {
     return await repository.fetchUpdateInfo();
   }
 }
-
 
 final fetchUpdateInfoUsecaseProvider = Provider<FetchUpdateInfoUsecase>((ref) {
   final repository = ref.watch(updateRepositoryProvider);

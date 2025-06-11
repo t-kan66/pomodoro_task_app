@@ -1,6 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../controllers/update_controller.dart';
+import '../controllers/controller.dart';
 
 abstract class RemoteConfigDataStore {
   Future<UpdateInfo> fetchUpdateInfo();
