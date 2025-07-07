@@ -7,6 +7,7 @@ import 'package:pomodoro_app/feature/timer/controllers/timer_state.dart';
 import '../../../core/controllers/controller.dart';
 import '../../../core/infras/infras.dart';
 import '../../../core/repositories/repositories.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../gen/assets.gen.dart';
 
 final timerControllerProvider =
@@ -16,6 +17,8 @@ final timerControllerProvider =
 class TimerControllerController extends Notifier<TimerState> {
   AsyncValue<SharedPreferenceRepository> get _repository =>
       ref.watch(sharedPreferenceRepositoryProvider);
+  
+  AnalyticsService get _analytics => ref.read(analyticsServiceProvider);
 
   @override
   TimerState build() {
@@ -51,6 +54,17 @@ class TimerControllerController extends Notifier<TimerState> {
     final timer = Timer.periodic(const Duration(seconds: 1), _onUpdateTimer);
 
     state = state.copyWith(isRunning: true, timer: timer);
+    
+    // Analytics: Log timer started
+    final timerType = state.status == PomodoroStatus.work ? 'work' : 'break';
+    final duration = state.status == PomodoroStatus.work 
+        ? state.initialWorkingDuration.inMinutes 
+        : state.initialBreakDuration.inMinutes;
+    
+    _analytics.logTimerStarted(
+      timerType: timerType,
+      duration: duration,
+    );
   }
 
   void _onUpdateTimer(Timer timer) {
@@ -62,6 +76,16 @@ class TimerControllerController extends Notifier<TimerState> {
       timer.cancel();
 
       final int completedPomodoros;
+      final String currentTimerType = state.status == PomodoroStatus.work ? 'work' : 'break';
+      final int currentDuration = state.status == PomodoroStatus.work 
+          ? state.initialWorkingDuration.inMinutes 
+          : state.initialBreakDuration.inMinutes;
+
+      // Analytics: Log timer completed
+      _analytics.logTimerCompleted(
+        timerType: currentTimerType,
+        duration: currentDuration,
+      );
 
       // ポモドーロの各種情報を更新する
       if (state.status == PomodoroStatus.work) {
@@ -114,6 +138,15 @@ class TimerControllerController extends Notifier<TimerState> {
     // 停止時の処理を追加
     state.timer?.cancel();
 
+    // Analytics: Log timer stopped
+    final timerType = state.status == PomodoroStatus.work ? 'work' : 'break';
+    final remainingTime = state.currentDurationTime.inSeconds;
+    
+    _analytics.logTimerStopped(
+      timerType: timerType,
+      remainingTime: remainingTime,
+    );
+
     // 停止時の処理を追加
     state = state.copyWith(isRunning: false);
   }
@@ -134,6 +167,12 @@ class TimerControllerController extends Notifier<TimerState> {
     final timer = Timer.periodic(const Duration(seconds: 1), _onUpdateTimer);
 
     state = state.copyWith(isRunning: true, timer: timer);
+    
+    // Analytics: Log break started
+    _analytics.logTimerStarted(
+      timerType: 'break',
+      duration: state.initialBreakDuration.inMinutes,
+    );
   }
 
   // timerの設定を取得

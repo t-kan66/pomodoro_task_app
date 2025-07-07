@@ -95,7 +95,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions iosDev = FirebaseOptions(
     apiKey: 'AIzaSyDRvJOzfAwg6V4Kfjt8_xk61NNKn8QKmgI',
-    appId: '1:864390988828:ios:xxxxx',
+    appId: '1:864390988828:ios:0a551e08c128e257834bd9',
     messagingSenderId: '864390988828',
     projectId: 'pomodoro-app-dev-ce8b6',
     storageBucket: 'pomodoro-app-dev-ce8b6.firebasestorage.app',
@@ -104,7 +104,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macosDev = FirebaseOptions(
     apiKey: 'AIzaSyDRvJOzfAwg6V4Kfjt8_xk61NNKn8QKmgI',
-    appId: '1:864390988828:ios:xxxxx',
+    appId: '1:864390988828:ios:0a551e08c128e257834bd9',
     messagingSenderId: '864390988828',
     projectId: 'pomodoro-app-dev-ce8b6',
     storageBucket: 'pomodoro-app-dev-ce8b6.firebasestorage.app',
@@ -140,7 +140,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions iosProd = FirebaseOptions(
     apiKey: 'AIzaSyDmUkgbKGhRUrGAGKII7CkL3Fq1HTS_5VU',
-    appId: '1:1032636817245:ios:xxxxx',
+    appId: '1:1032636817245:ios:a8fdeb3ae4fbd1be7012b4',
     messagingSenderId: '1032636817245',
     projectId: 'pomodoro-app-f720d',
     storageBucket: 'pomodoro-app-f720d.firebasestorage.app',
@@ -149,7 +149,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macosProd = FirebaseOptions(
     apiKey: 'AIzaSyDmUkgbKGhRUrGAGKII7CkL3Fq1HTS_5VU',
-    appId: '1:1032636817245:ios:xxxxx',
+    appId: '1:1032636817245:ios:a8fdeb3ae4fbd1be7012b4',
     messagingSenderId: '1032636817245',
     projectId: 'pomodoro-app-f720d',
     storageBucket: 'pomodoro-app-f720d.firebasestorage.app',
