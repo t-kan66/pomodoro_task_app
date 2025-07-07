@@ -4,15 +4,19 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/feature/setting/pages/timer_settings_page.dart';
 
+import '../core/services/analytics_service.dart';
 import '../feature/setting/pages/page.dart';
 import '../feature/timer/pages/page.dart';
 
 part 'main_router.g.dart';
 
 final mainRouterProvider = Provider<GoRouter>((ref) {
+  final analyticsObserver = ref.watch(firebaseAnalyticsObserverProvider);
+  
   return GoRouter(
       initialLocation: TimerPageRoute().location,
       debugLogDiagnostics: kDebugMode,
+      observers: [analyticsObserver],
       redirect: (context, state) {
         return null;
       },
