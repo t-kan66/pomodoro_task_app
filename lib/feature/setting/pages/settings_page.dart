@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../routers/main_router.dart';
+import '../../../core/controllers/auth_controller.dart';
+import '../../../core/controllers/route_redirect_controller.dart';
 
 class SettingsPage extends HookConsumerWidget {
   const SettingsPage({super.key});
@@ -50,183 +53,97 @@ class SettingsPage extends HookConsumerWidget {
               },
             ),
           ]),
+          // アカウント管理セクションを追加
+          SettingsSection(
+            title: const Text('アカウント'),
+            tiles: [
+              SettingsTile(
+                title: const Text('ログアウト', style: TextStyle(color: Colors.red)),
+                leading: const Icon(Icons.logout, color: Colors.red),
+                onPressed: (context) async {
+                  // ログアウト確認ダイアログを表示
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('ログアウト'),
+                      content: const Text('ログアウトしますか？'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('キャンセル'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
+                          child: const Text('ログアウト'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (shouldLogout == true && context.mounted) {
+                    try {
+                      await ref.read(authControllerProvider.notifier).logout();
+                      
+                      if (context.mounted) {
+                        // ログアウト後はログイン画面にリダイレクト
+                        context.go('/login');
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('ログアウトに失敗しました: $e')),
+                        );
+                      }
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
+          // デバッグセクション（本番環境では削除推奨）
+          SettingsSection(
+            title: const Text('デバッグ (開発用)'),
+            tiles: [
+              SettingsTile.switchTile(
+                initialValue: ref.watch(authControllerProvider).when(
+                  data: (authState) => authState.status == AuthStatus.authenticated,
+                  loading: () => false,
+                  error: (error, stack) => false,
+                ),
+                onToggle: (isLoggedIn) async {
+                  try {
+                    await ref.read(authControllerProvider.notifier).setLoginStatus(isLoggedIn);
+                    
+                    // 状態を更新
+                    ref.read(routeRedirectControllerProvider.notifier).refresh();
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('状態変更に失敗: $e')),
+                      );
+                    }
+                  }
+                },
+                title: const Text('ログイン状態'),
+                leading: const Icon(Icons.account_circle),
+              ),
+              SettingsTile(
+                title: const Text('リダイレクト状態をリフレッシュ'),
+                leading: const Icon(Icons.refresh),
+                onPressed: (context) {
+                  ref.read(routeRedirectControllerProvider.notifier).refresh();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('状態をリフレッシュしました')),
+                  );
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
-
-
-
-// class SettingsTopPage extends HookConsumerWidget {
-//   const SettingsTopPage({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final settingsState = ref.watch(settingsNotifierProvider);
-
-//     // 初回生成時、UI更新時以外にATTのリクエストを行う。
-//     // 戻り値としてnullを返却する。
-//     useEffect(() {
-//       WidgetsBinding.instance.addPostFrameCallback((_) {
-// //        ref.read(settingsNotifierProvider.notifier).requestATT();
-//       });
-//       return null;
-//     });
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(L10n.of(context)!.settings_title),
-//       ),
-//       body: SettingsList(sections: [
-//         SettingsSection(
-//           title: Text(L10n.of(context)!.setting_page_section_smile_detection),
-//           tiles: [
-//             SettingsTile.switchTile(
-//                 initialValue: settingsState.smilePhotoEnable,
-//                 onToggle: (value) {
-//                   ref
-//                       .read(settingsNotifierProvider.notifier)
-//                       .toggleSmilePhotoEnable(value);
-//                 },
-//                 title: Text(
-//                     L10n.of(context)!.setting_page_row_smile_detection_active)),
-//             // 自動撮影の時間感覚
-//             SettingsTile.navigation(
-//               title: Row(
-//                 children: [
-//                   Text(
-//                       L10n.of(context)!.setting_page_row_take_picture_interval),
-//                   const Spacer(),
-//                   Text("${settingsState.takePictureFrequency} sec"),
-//                 ],
-//               ),
-//               onPressed: (context) => _showTakePictureFrequencyPicker(
-//                   context, ref, settingsState.takePictureFrequency),
-//             ),
-//             // 笑顔検出率の設定
-
-//             SettingsTile.navigation(
-//               title: Row(
-//                 children: [
-//                   Text(L10n.of(context)!
-//                       .setting_page_row_smile_detection_setting_detail),
-//                   const Spacer(),
-//                   Text("${(settingsState.smilePropThreshold * 100).toInt()}%"),
-//                 ],
-//               ),
-//               onPressed: (context) => _showSmilePropThreadholdPicker(
-//                   context, ref, settingsState.smilePropThreshold),
-//             ),
-//             SettingsTile.switchTile(
-//                 initialValue: settingsState.openEyesEnable,
-//                 onToggle: (value) {
-//                   ref
-//                       .read(settingsNotifierProvider.notifier)
-//                       .toggleOpenEyesEnable(value);
-//                 },
-//                 title:
-//                     Text(L10n.of(context)!.setting_page_row_open_eyes_active)),
-//           ],
-//         ),
-//         const CustomSettingsSection(
-//           child: SmilyAdWidget(position: AdBannerPosition.settingMiddle),
-//         ),
-
-//         SettingsSection(
-//           title: Text(L10n.of(context)!.setting_page_section_review),
-//           tiles: [
-//             SettingsTile.navigation(
-//               title: Text(L10n.of(context)!.setting_page_row_appstore_review),
-//               onPressed: (context) {
-//                 ref.read(settingsNotifierProvider.notifier).launchAppReview();
-//               },
-//             ),
-//           ],
-//         ),
-
-//         // SettingSectionを定義する
-//         // 内容は問い合わせフォームとアプリのレビュー
-//         SettingsSection(
-//           title: Text(L10n.of(context)!.setting_page_section_review),
-//           tiles: [
-//             SettingsTile.navigation(
-//               title: Text(L10n.of(context)!.setting_page_row_contact_form),
-//               onPressed: (context) {
-//                 ref.read(routerProvider).push(AppRouter.contactFormPage);
-//               },
-//             ),
-//           ],
-//         ),
-//         SettingsSection(
-//           title: Text(L10n.of(context)!.setting_page_section_other),
-//           tiles: [
-//             SettingsTile.navigation(
-//               title: Text(L10n.of(context)!.privacy_policy_page),
-//               onPressed: (context) {
-//                 ref.read(routerProvider).push(AppRouter.privacyPolicyPage);
-//               },
-//             ),
-//             SettingsTile.navigation(
-//               title: Text(L10n.of(context)!.setting_page_row_license),
-//               onPressed: (context) {
-//                 showLicensePage(context: context);
-//               },
-//             ),
-//             SettingsTile.navigation(
-//               title: Text(L10n.of(context)!.setting_page_row_version),
-//               trailing: Text(settingsState.packageInfo?.version ?? '1.0.0'),
-//             ),
-//           ],
-//         )
-//       ]),
-//     );
-//   }
-
-//   _showSmilePropThreadholdPicker(
-//       BuildContext context, WidgetRef ref, double initValue) {
-//     Picker(
-//         cancelText: L10n.of(context)!.common_close,
-//         confirmText: L10n.of(context)!.common_save,
-//         adapter: NumberPickerAdapter(data: [
-//           NumberPickerColumn(
-//               begin: 0,
-//               end: 100,
-//               initValue: (initValue * 100).toInt(),
-//               jump: 10),
-//         ]),
-//         hideHeader: true,
-//         title: Text(
-//             L10n.of(context)!.setting_page_row_smile_detection_setting_detail),
-//         selectedTextStyle: const TextStyle(color: Colors.blue),
-//         onConfirm: (Picker picker, List value) {
-//           ref
-//               .read(settingsNotifierProvider.notifier)
-//               .saveSmilePropThreadhold(picker.getSelectedValues()[0] / 100);
-//         }).showDialog(context);
-//   }
-
-//   _showTakePictureFrequencyPicker(
-//       BuildContext context, WidgetRef ref, int initValue) {
-//     Picker(
-//         cancelText: L10n.of(context)!.common_close,
-//         confirmText: L10n.of(context)!.common_save,
-//         adapter: NumberPickerAdapter(data: [
-//           NumberPickerColumn(
-//             begin: 0,
-//             end: 10,
-//             initValue: initValue,
-//           ),
-//         ]),
-//         hideHeader: true,
-//         title: Text(L10n.of(context)!.setting_page_row_take_picture_interval),
-//         selectedTextStyle: const TextStyle(color: Colors.blue),
-//         onConfirm: (Picker picker, List value) {
-//           ref
-//               .read(settingsNotifierProvider.notifier)
-//               .saveTakePictureFrequency(picker.getSelectedValues()[0]);
-//         }).showDialog(context);
-//   }
-// }

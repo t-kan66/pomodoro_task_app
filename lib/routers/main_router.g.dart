@@ -7,8 +7,78 @@ part of 'main_router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
+      $splashPageRoute,
+      $loginPageRoute,
+      $forceUpdatePageRoute,
       $timerPageRoute,
     ];
+
+RouteBase get $splashPageRoute => GoRouteData.$route(
+      path: '/splash',
+      factory: $SplashPageRouteExtension._fromState,
+    );
+
+extension $SplashPageRouteExtension on SplashPageRoute {
+  static SplashPageRoute _fromState(GoRouterState state) => SplashPageRoute();
+
+  String get location => GoRouteData.$location(
+        '/splash',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $loginPageRoute => GoRouteData.$route(
+      path: '/login',
+      factory: $LoginPageRouteExtension._fromState,
+    );
+
+extension $LoginPageRouteExtension on LoginPageRoute {
+  static LoginPageRoute _fromState(GoRouterState state) => LoginPageRoute();
+
+  String get location => GoRouteData.$location(
+        '/login',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $forceUpdatePageRoute => GoRouteData.$route(
+      path: '/force-update',
+      factory: $ForceUpdatePageRouteExtension._fromState,
+    );
+
+extension $ForceUpdatePageRouteExtension on ForceUpdatePageRoute {
+  static ForceUpdatePageRoute _fromState(GoRouterState state) =>
+      ForceUpdatePageRoute();
+
+  String get location => GoRouteData.$location(
+        '/force-update',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $timerPageRoute => GoRouteData.$route(
       path: '/',
