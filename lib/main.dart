@@ -29,7 +29,20 @@ void main() async {
     fetchTimeout: const Duration(seconds: 10),
     minimumFetchInterval: const Duration(hours: 1),
   ));
-  await remoteConfig.fetchAndActivate();
+  
+  // デフォルト値を設定
+  await remoteConfig.setDefaults({
+    'update_type': 0, // 0: アップデートなし, 1: 任意アップデート, 2: 強制アップデート
+    'latest_version': '1.0.0',
+    'update_message': 'アプリが最新バージョンです',
+    'store_url': 'https://play.google.com/store/apps',
+  });
+  
+  try {
+    await remoteConfig.fetchAndActivate();
+  } catch (e) {
+    log('Remote Config fetch failed: $e');
+  }
 
   runApp(const ProviderScope(child: MyApp()));
 }

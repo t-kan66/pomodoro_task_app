@@ -17,8 +17,9 @@ class RouteRedirectController
         authState: null,
       ));
 
-      // アップデート情報を並行して取得
-      final updateInfoFuture = ref.read(appUpdateControllerProvider).getUpdateInfo();
+      // アップデート情報を並行して取得（タイムアウト付き）
+      final updateInfoFuture = ref.read(appUpdateControllerProvider).getUpdateInfo()
+          .timeout(const Duration(seconds: 15)); // 15秒でタイムアウト
       
       // ログイン状態を並行して取得
       final authStateAsync = ref.read(authControllerProvider);
@@ -51,10 +52,19 @@ class RouteRedirectController
         authState: authState,
       );
     } catch (error, stackTrace) {
+      // エラーログを出力
+      print('RouteRedirectController build error: $error');
+      print('StackTrace: $stackTrace');
+      
       return RouteRedirectState(
         launchState: LaunchState.failed(error, stackTrace),
         isSigning: false,
-        updateInfo: null,
+        updateInfo: const UpdateInfo(
+          updateType: 0,
+          latestVersion: '1.0.0',
+          message: 'アプリが最新バージョンです',
+          storeUrl: 'https://play.google.com/store/apps',
+        ),
         authState: const AuthState(status: AuthStatus.unauthenticated),
       );
     }
