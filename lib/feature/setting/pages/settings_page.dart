@@ -3,9 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/controllers/controller.dart';
 import '../../../routers/main_router.dart';
-import '../../../core/controllers/auth_controller.dart';
-import '../../../core/controllers/route_redirect_controller.dart';
 
 class SettingsPage extends HookConsumerWidget {
   const SettingsPage({super.key});
