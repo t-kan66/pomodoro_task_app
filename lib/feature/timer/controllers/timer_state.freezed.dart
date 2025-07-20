@@ -225,7 +225,8 @@ mixin _$TimerState {
   Timer? get timer => throw _privateConstructorUsedError;
   int get completedPomodoros =>
       throw _privateConstructorUsedError; // 完了したポモドーロの数
-  PomodoroStatus get status => throw _privateConstructorUsedError;
+  PomodoroStatus get status => throw _privateConstructorUsedError; // ポモドーロの状態
+  int get maxPomodoros => throw _privateConstructorUsedError;
 
   /// Create a copy of TimerState
   /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +250,8 @@ abstract class $TimerStateCopyWith<$Res> {
       bool isRunning,
       Timer? timer,
       int completedPomodoros,
-      PomodoroStatus status});
+      PomodoroStatus status,
+      int maxPomodoros});
 }
 
 /// @nodoc
@@ -276,6 +278,7 @@ class _$TimerStateCopyWithImpl<$Res, $Val extends TimerState>
     Object? timer = freezed,
     Object? completedPomodoros = null,
     Object? status = null,
+    Object? maxPomodoros = null,
   }) {
     return _then(_value.copyWith(
       initialWorkingDuration: null == initialWorkingDuration
@@ -314,6 +317,10 @@ class _$TimerStateCopyWithImpl<$Res, $Val extends TimerState>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as PomodoroStatus,
+      maxPomodoros: null == maxPomodoros
+          ? _value.maxPomodoros
+          : maxPomodoros // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -335,7 +342,8 @@ abstract class _$$TimerStateImplCopyWith<$Res>
       bool isRunning,
       Timer? timer,
       int completedPomodoros,
-      PomodoroStatus status});
+      PomodoroStatus status,
+      int maxPomodoros});
 }
 
 /// @nodoc
@@ -360,6 +368,7 @@ class __$$TimerStateImplCopyWithImpl<$Res>
     Object? timer = freezed,
     Object? completedPomodoros = null,
     Object? status = null,
+    Object? maxPomodoros = null,
   }) {
     return _then(_$TimerStateImpl(
       initialWorkingDuration: null == initialWorkingDuration
@@ -398,6 +407,10 @@ class __$$TimerStateImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as PomodoroStatus,
+      maxPomodoros: null == maxPomodoros
+          ? _value.maxPomodoros
+          : maxPomodoros // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -414,7 +427,8 @@ class _$TimerStateImpl implements _TimerState {
       this.isRunning = false,
       this.timer = null,
       this.completedPomodoros = 0,
-      this.status = PomodoroStatus.work});
+      this.status = PomodoroStatus.work,
+      this.maxPomodoros = 4});
 
   @override
   @JsonKey()
@@ -450,10 +464,14 @@ class _$TimerStateImpl implements _TimerState {
   @override
   @JsonKey()
   final PomodoroStatus status;
+// ポモドーロの状態
+  @override
+  @JsonKey()
+  final int maxPomodoros;
 
   @override
   String toString() {
-    return 'TimerState(initialWorkingDuration: $initialWorkingDuration, initialBreakDuration: $initialBreakDuration, currentWorkingDuration: $currentWorkingDuration, currentBreakDuration: $currentBreakDuration, intervalDuration: $intervalDuration, isRunning: $isRunning, timer: $timer, completedPomodoros: $completedPomodoros, status: $status)';
+    return 'TimerState(initialWorkingDuration: $initialWorkingDuration, initialBreakDuration: $initialBreakDuration, currentWorkingDuration: $currentWorkingDuration, currentBreakDuration: $currentBreakDuration, intervalDuration: $intervalDuration, isRunning: $isRunning, timer: $timer, completedPomodoros: $completedPomodoros, status: $status, maxPomodoros: $maxPomodoros)';
   }
 
   @override
@@ -476,7 +494,9 @@ class _$TimerStateImpl implements _TimerState {
             (identical(other.timer, timer) || other.timer == timer) &&
             (identical(other.completedPomodoros, completedPomodoros) ||
                 other.completedPomodoros == completedPomodoros) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.maxPomodoros, maxPomodoros) ||
+                other.maxPomodoros == maxPomodoros));
   }
 
   @override
@@ -490,7 +510,8 @@ class _$TimerStateImpl implements _TimerState {
       isRunning,
       timer,
       completedPomodoros,
-      status);
+      status,
+      maxPomodoros);
 
   /// Create a copy of TimerState
   /// with the given fields replaced by the non-null parameter values.
@@ -511,7 +532,8 @@ abstract class _TimerState implements TimerState {
       final bool isRunning,
       final Timer? timer,
       final int completedPomodoros,
-      final PomodoroStatus status}) = _$TimerStateImpl;
+      final PomodoroStatus status,
+      final int maxPomodoros}) = _$TimerStateImpl;
 
   @override
   Duration get initialWorkingDuration; // 初期時間
@@ -530,7 +552,9 @@ abstract class _TimerState implements TimerState {
   @override
   int get completedPomodoros; // 完了したポモドーロの数
   @override
-  PomodoroStatus get status;
+  PomodoroStatus get status; // ポモドーロの状態
+  @override
+  int get maxPomodoros;
 
   /// Create a copy of TimerState
   /// with the given fields replaced by the non-null parameter values.

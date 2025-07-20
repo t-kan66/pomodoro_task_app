@@ -109,6 +109,12 @@ abstract class L10n {
   /// **'アプリテキスト'**
   String get appText;
 
+  /// No description provided for @minutes.
+  ///
+  /// In ja, this message translates to:
+  /// **'分'**
+  String get minutes;
+
   /// No description provided for @working_start.
   ///
   /// In ja, this message translates to:
@@ -120,6 +126,78 @@ abstract class L10n {
   /// In ja, this message translates to:
   /// **'停止'**
   String get working_stop;
+
+  /// ポモドーロタイマーのタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'ポモドーロタイマー'**
+  String get pomodoro_title;
+
+  /// ポモドーロを開始するボタンのテキスト
+  ///
+  /// In ja, this message translates to:
+  /// **'ポモドーロを開始'**
+  String get start_pomodoro;
+
+  /// 作業のラベル
+  ///
+  /// In ja, this message translates to:
+  /// **'作業'**
+  String get working_phase;
+
+  /// 休憩のラベル
+  ///
+  /// In ja, this message translates to:
+  /// **'休憩'**
+  String get resting_phase;
+
+  /// サイクルのラベル
+  ///
+  /// In ja, this message translates to:
+  /// **'サイクル'**
+  String get cycles;
+
+  /// タイマー停止確認ダイアログのタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'確認'**
+  String get close_confirm_title;
+
+  /// タイマー停止確認ダイアログの本文
+  ///
+  /// In ja, this message translates to:
+  /// **'タイマーをストップし、画面を閉じます。'**
+  String get close_confirm_message;
+
+  /// はいボタン
+  ///
+  /// In ja, this message translates to:
+  /// **'はい'**
+  String get yes;
+
+  /// いいえボタン
+  ///
+  /// In ja, this message translates to:
+  /// **'いいえ'**
+  String get no;
+
+  /// ポモドーロ完了時のタイトル
+  ///
+  /// In ja, this message translates to:
+  /// **'ポモドーロ完了！'**
+  String get pomodoro_completed_title;
+
+  /// ポモドーロ完了時のメッセージ
+  ///
+  /// In ja, this message translates to:
+  /// **'お疲れさまでした！\nしっかり休憩しましょう！'**
+  String get pomodoro_completed_message;
+
+  /// 閉じるボタン
+  ///
+  /// In ja, this message translates to:
+  /// **'閉じる'**
+  String get close;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

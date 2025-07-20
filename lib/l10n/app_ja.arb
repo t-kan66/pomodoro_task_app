@@ -8,7 +8,55 @@
     "@appText": {
       "description": "appTextの説明"
     },
+    "minutes": "分",
     "working_start": "開始",
-    "working_stop": "停止"
-
+    "working_stop": "停止",
+    "pomodoro_title": "ポモドーロタイマー",
+    "@pomodoro_title": {
+      "description": "ポモドーロタイマーのタイトル"
+    },
+    "start_pomodoro": "ポモドーロを開始",
+    "@start_pomodoro": {
+      "description": "ポモドーロを開始するボタンのテキスト"
+    },
+    "working_phase": "作業",
+    "@working_phase": {
+      "description": "作業のラベル"
+    },
+    "resting_phase": "休憩",
+    "@resting_phase": {
+      "description": "休憩のラベル"
+    },
+    "cycles": "サイクル",
+    "@cycles": {
+      "description": "サイクルのラベル"
+    },
+    "close_confirm_title": "確認",
+    "@close_confirm_title": {
+      "description": "タイマー停止確認ダイアログのタイトル"
+    },
+    "close_confirm_message": "タイマーをストップし、画面を閉じます。",
+    "@close_confirm_message": {
+      "description": "タイマー停止確認ダイアログの本文"
+    },
+    "yes": "はい",
+    "@yes": {
+      "description": "はいボタン"
+    },
+    "no": "いいえ",
+    "@no": {
+      "description": "いいえボタン"
+    },
+    "pomodoro_completed_title": "ポモドーロ完了！",
+    "@pomodoro_completed_title": {
+      "description": "ポモドーロ完了時のタイトル"
+    },
+    "pomodoro_completed_message": "お疲れさまでした！\nしっかり休憩しましょう！",
+    "@pomodoro_completed_message": {
+      "description": "ポモドーロ完了時のメッセージ"
+    },
+    "close": "閉じる",
+    "@close": {
+      "description": "閉じるボタン"
+    }
 }

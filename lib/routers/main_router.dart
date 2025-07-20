@@ -157,3 +157,13 @@ class TimerSettingPageRoute extends GoRouteData {
     return const TimerSettingsPage();
   }
 }
+
+// @TypedStatefulShellRoute<MainShellRouteData>(
+//   branches: <TypedStatefulShellBranchRoute>[
+//     TypedStatefulShellBranchRoute(
+//       routes: <TypedGoRoute>[
+//         TimerPageRoute(),
+//         SettingsPageRoute(),
+//       ],
+//     ),
+//   ])
