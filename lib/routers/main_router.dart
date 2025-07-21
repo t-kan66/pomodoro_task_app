@@ -44,26 +44,19 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
           if (currentPath == SplashPageRoute().location) {
             switch (redirectState.launchState) {
               case LaunchingStatus():
-                print('⏳ Router: Still launching, staying on splash');
                 return null; // スプラッシュ画面のまま
               case CompletedStatus():
-                print('🎯 Router: Launch completed, checking auth status');
                 // 起動完了後の遷移判定
                 if (redirectState.authState?.status == AuthStatus.unauthenticated) {
-                  print('🔐 Router: Redirecting to login (unauthenticated)');
                   return LoginPageRoute().location;
                 } else if (redirectState.authState?.status == AuthStatus.authenticated) {
-                  print('✅ Router: Redirecting to timer (authenticated)');
                   // 任意アップデートがある場合はダイアログを表示するためタイマー画面へ
                   return TimerPageRoute().location;
                 } else if (redirectState.authState?.status == AuthStatus.unknown) {
-                  print('❓ Router: Auth status unknown, redirecting to login');
                   return LoginPageRoute().location;
                 }
-                print('⚠️ Router: Unexpected auth status, staying on splash');
                 return null;
               case FailedStatus():
-                print('❌ Router: Launch failed, redirecting to login');
                 // エラーが発生した場合はログイン画面へ
                 return LoginPageRoute().location;
             }
@@ -86,7 +79,6 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
           return null;
         },
         loading: () {
-          print('⏳ Router: Loading state');
           // ローディング中はスプラッシュ画面を表示
           if (state.uri.path != SplashPageRoute().location) {
             return SplashPageRoute().location;
@@ -94,7 +86,6 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
           return null;
         },
         error: (error, stack) {
-          print('❌ Router: Error state - $error');
           // エラーが発生した場合はログイン画面へ
           if (state.uri.path != LoginPageRoute().location) {
             return LoginPageRoute().location;

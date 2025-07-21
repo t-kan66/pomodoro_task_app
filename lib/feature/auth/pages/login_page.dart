@@ -14,15 +14,15 @@ class LoginPage extends HookConsumerWidget {
 
     Future<void> handleLogin() async {
       if (isLoading.value) return;
-      
+
       isLoading.value = true;
-      
+
       try {
         final success = await ref.read(authControllerProvider.notifier).login(
-          emailController.text,
-          passwordController.text,
-        );
-        
+              emailController.text,
+              passwordController.text,
+            );
+
         if (success && context.mounted) {
           // ログイン成功時は自動的にリダイレクトされる
           ScaffoldMessenger.of(context).showSnackBar(

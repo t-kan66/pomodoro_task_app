@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class SoundManager {
   SoundManager();
 
-  // AudioPlayerのインスタンス生成時にmode: PlayerMode.lowLatencyを指定するとSE用途でエラーが減ります
   final AudioPlayer _bgmPlayer = AudioPlayer();
   final AudioPlayer _sePlayer = AudioPlayer(
     playerId: 'se',

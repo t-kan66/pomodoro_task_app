@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../controllers/controller.dart';
-import '../controllers/update_controller.dart';
 import '../repositories/repositories.dart';
 
 class FetchUpdateInfoUsecase {
