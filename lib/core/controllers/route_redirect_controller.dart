@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pomodoro_app/core/controllers/controller.dart';
 
@@ -8,6 +9,8 @@ class RouteRedirectController
     extends AutoDisposeAsyncNotifier<RouteRedirectState> {
   @override
   Future<RouteRedirectState> build() async {
+    debugPrint('🚀 RouteRedirectController: Starting build...');
+    
     try {
       // アップデート情報を並行して取得（タイムアウト付き）
       final updateInfoFuture = ref.read(appUpdateControllerProvider).getUpdateInfo()
@@ -15,6 +18,8 @@ class RouteRedirectController
       
       // ログイン状態を並行して取得
       final authStateAsync = ref.read(authControllerProvider);
+      
+      debugPrint('🔍 RouteRedirectController: Starting to fetch data...');
       
       // 両方の情報を待機
       final updateInfo = await updateInfoFuture;
@@ -24,8 +29,11 @@ class RouteRedirectController
         error: (error, stack) => Future.value(const AuthState(status: AuthStatus.unauthenticated)),
       );
 
+      debugPrint('✅ RouteRedirectController: Data fetched - updateType: ${updateInfo.updateType}, authStatus: ${authState.status}');
+
       // 強制アップデートが必要な場合
       if (updateInfo.updateType == 2) {
+        debugPrint('🔄 RouteRedirectController: Returning force update state');
         return RouteRedirectState(
           launchState: const LaunchState.completed(),
           isSigning: false,
@@ -37,6 +45,7 @@ class RouteRedirectController
       // 認証状態によって処理を分岐
       final bool isSigning = authState.status == AuthStatus.unknown;
 
+      debugPrint('🎯 RouteRedirectController: Returning completed state');
       return RouteRedirectState(
         launchState: const LaunchState.completed(),
         isSigning: isSigning,
@@ -44,6 +53,7 @@ class RouteRedirectController
         authState: authState,
       );
     } catch (error, stackTrace) {
+      debugPrint('❌ RouteRedirectController: Error - $error');
       return RouteRedirectState(
         launchState: LaunchState.failed(error, stackTrace),
         isSigning: false,

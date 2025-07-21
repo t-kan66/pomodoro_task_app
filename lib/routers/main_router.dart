@@ -14,16 +14,23 @@ import 'package:pomodoro_app/feature/update/widgets/optional_update_dialog.dart'
 part 'main_router.g.dart';
 
 final mainRouterProvider = Provider<GoRouter>((ref) {
+  // RouteRedirectControllerの状態変化を監視するためのNotifier
+  final routeNotifier = RouteChangeNotifier(ref);
+  
   return GoRouter(
     initialLocation: SplashPageRoute().location,
     debugLogDiagnostics: kDebugMode,
+    refreshListenable: routeNotifier,
     redirect: (context, state) {
-      // リダイレクト状態を監視
+      print('🔄 Router: redirect called for path: ${state.uri.path}');
+      
+      // ref.readを使用（watchは使わない）
       final redirectStateAsync = ref.read(routeRedirectControllerProvider);
 
       return redirectStateAsync.when(
         data: (redirectState) {
           final currentPath = state.uri.path;
+          print('✅ Router: Data state - currentPath: $currentPath, launchState: ${redirectState.launchState}');
 
           // 強制アップデートが必要な場合
           if (redirectState.updateInfo?.updateType == 2) {
@@ -37,19 +44,26 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
           if (currentPath == SplashPageRoute().location) {
             switch (redirectState.launchState) {
               case LaunchingStatus():
+                print('⏳ Router: Still launching, staying on splash');
                 return null; // スプラッシュ画面のまま
               case CompletedStatus():
+                print('🎯 Router: Launch completed, checking auth status');
                 // 起動完了後の遷移判定
-                if (redirectState.authState?.status ==
-                    AuthStatus.unauthenticated) {
+                if (redirectState.authState?.status == AuthStatus.unauthenticated) {
+                  print('🔐 Router: Redirecting to login (unauthenticated)');
                   return LoginPageRoute().location;
-                } else if (redirectState.authState?.status ==
-                    AuthStatus.authenticated) {
+                } else if (redirectState.authState?.status == AuthStatus.authenticated) {
+                  print('✅ Router: Redirecting to timer (authenticated)');
                   // 任意アップデートがある場合はダイアログを表示するためタイマー画面へ
                   return TimerPageRoute().location;
+                } else if (redirectState.authState?.status == AuthStatus.unknown) {
+                  print('❓ Router: Auth status unknown, redirecting to login');
+                  return LoginPageRoute().location;
                 }
+                print('⚠️ Router: Unexpected auth status, staying on splash');
                 return null;
               case FailedStatus():
+                print('❌ Router: Launch failed, redirecting to login');
                 // エラーが発生した場合はログイン画面へ
                 return LoginPageRoute().location;
             }
@@ -72,6 +86,7 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
           return null;
         },
         loading: () {
+          print('⏳ Router: Loading state');
           // ローディング中はスプラッシュ画面を表示
           if (state.uri.path != SplashPageRoute().location) {
             return SplashPageRoute().location;
@@ -79,6 +94,7 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
           return null;
         },
         error: (error, stack) {
+          print('❌ Router: Error state - $error');
           // エラーが発生した場合はログイン画面へ
           if (state.uri.path != LoginPageRoute().location) {
             return LoginPageRoute().location;
@@ -157,6 +173,17 @@ class TimerSettingPageRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const TimerSettingsPage();
+  }
+}
+
+// RouteRedirectControllerの状態変化を監視するためのNotifier
+class RouteChangeNotifier extends ChangeNotifier {
+  final Ref ref;
+  RouteChangeNotifier(this.ref) {
+    // RouteRedirectControllerの状態変化を監視
+    ref.listen(routeRedirectControllerProvider, (previous, next) {
+      notifyListeners();
+    });
   }
 }
 
