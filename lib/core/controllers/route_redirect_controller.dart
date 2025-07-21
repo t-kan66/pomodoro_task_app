@@ -9,14 +9,6 @@ class RouteRedirectController
   @override
   Future<RouteRedirectState> build() async {
     try {
-      // 起動中の状態を設定
-      state = const AsyncValue.data(RouteRedirectState(
-        launchState: LaunchState.launching(),
-        isSigning: true,
-        updateInfo: null,
-        authState: null,
-      ));
-
       // アップデート情報を並行して取得（タイムアウト付き）
       final updateInfoFuture = ref.read(appUpdateControllerProvider).getUpdateInfo()
           .timeout(const Duration(seconds: 15)); // 15秒でタイムアウト
@@ -52,10 +44,6 @@ class RouteRedirectController
         authState: authState,
       );
     } catch (error, stackTrace) {
-      // エラーログを出力
-      print('RouteRedirectController build error: $error');
-      print('StackTrace: $stackTrace');
-      
       return RouteRedirectState(
         launchState: LaunchState.failed(error, stackTrace),
         isSigning: false,

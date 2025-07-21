@@ -20,11 +20,11 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       // リダイレクト状態を監視
       final redirectStateAsync = ref.read(routeRedirectControllerProvider);
-      
+
       return redirectStateAsync.when(
         data: (redirectState) {
           final currentPath = state.uri.path;
-          
+
           // 強制アップデートが必要な場合
           if (redirectState.updateInfo?.updateType == 2) {
             if (currentPath != ForceUpdatePageRoute().location) {
@@ -32,7 +32,7 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
             }
             return null;
           }
-          
+
           // スプラッシュ画面の場合、起動状態をチェック
           if (currentPath == SplashPageRoute().location) {
             switch (redirectState.launchState) {
@@ -40,9 +40,11 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
                 return null; // スプラッシュ画面のまま
               case CompletedStatus():
                 // 起動完了後の遷移判定
-                if (redirectState.authState?.status == AuthStatus.unauthenticated) {
+                if (redirectState.authState?.status ==
+                    AuthStatus.unauthenticated) {
                   return LoginPageRoute().location;
-                } else if (redirectState.authState?.status == AuthStatus.authenticated) {
+                } else if (redirectState.authState?.status ==
+                    AuthStatus.authenticated) {
                   // 任意アップデートがある場合はダイアログを表示するためタイマー画面へ
                   return TimerPageRoute().location;
                 }
@@ -52,7 +54,7 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
                 return LoginPageRoute().location;
             }
           }
-          
+
           // ログイン画面以外で未認証の場合はログイン画面へリダイレクト
           if (redirectState.authState?.status == AuthStatus.unauthenticated &&
               currentPath != LoginPageRoute().location &&
@@ -60,13 +62,13 @@ final mainRouterProvider = Provider<GoRouter>((ref) {
               currentPath != ForceUpdatePageRoute().location) {
             return LoginPageRoute().location;
           }
-          
+
           // 認証済みでログイン画面にいる場合はタイマー画面へリダイレクト
           if (redirectState.authState?.status == AuthStatus.authenticated &&
               currentPath == LoginPageRoute().location) {
             return TimerPageRoute().location;
           }
-          
+
           return null;
         },
         loading: () {
@@ -126,7 +128,7 @@ class TimerPageRoute extends GoRouteData {
       builder: (context, ref, child) {
         // 任意アップデートダイアログの表示判定
         final redirectStateAsync = ref.watch(routeRedirectControllerProvider);
-        
+
         redirectStateAsync.whenData((redirectState) {
           if (redirectState.updateInfo?.updateType == 1) {
             // 任意アップデートダイアログを一度だけ表示
@@ -137,7 +139,7 @@ class TimerPageRoute extends GoRouteData {
             });
           }
         });
-        
+
         return const TimerPage();
       },
     );
